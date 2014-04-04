@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package clustering;
+package spectralClustering.data;
 
 /**
  * BCEdge class
