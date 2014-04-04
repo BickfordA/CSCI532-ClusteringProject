@@ -10,6 +10,8 @@ public class Main {
     public static void main(String[] args){
     	//read in dataset 
     	BaseGraph rawGraph = new BaseGraph();
+    	//i think this creates a connected graph?
+    	//creating a planar graph might speed things up later on?
     	
     	//create MST
     	// find MST using Prim's

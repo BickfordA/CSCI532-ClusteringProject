@@ -13,6 +13,7 @@ public class TunableParameters {
 	//file variables
 	private final String _sourceDataFilePath;
 	private final int _sourceDataAttributeNum;
+	private final int _sourceDataSetSize;
 	
 	
 	
@@ -20,6 +21,7 @@ public class TunableParameters {
 	private TunableParameters(){
 		_sourceDataFilePath  = "breastcancer.txt";
 		_sourceDataAttributeNum = 9;
+		_sourceDataSetSize = 0; //need to look this up
 		
 	}
 	
@@ -38,4 +40,5 @@ public class TunableParameters {
 	 */
 	public String getFileName(){ return _sourceDataFilePath; }
 	public int getFileAttributeNum(){ return _sourceDataAttributeNum;}
+	public int getDataSetSize(){ return _sourceDataSetSize; }
 }
