@@ -42,13 +42,13 @@ public class BaseGraph {
             while( scan.hasNextLine() ) {
                 int ID = scan.nextInt();
                 //System.out.println(ID);
-                double[] attr = new double[_numAttributes];
+                Double[] attr = new Double[_numAttributes];
                 for(int i = 0; i < _numAttributes; i++) {
                     String s = scan.next();
                     if( s.equals("?") ){
-                        attr[i] = Double.NaN;
+                        attr[i] = null;
                     } else {
-                        attr[i] = Integer.valueOf(s);
+                        attr[i] = Double.valueOf(s);
                     }
                     //System.out.print(attr[i] + " ");
                 }
@@ -79,7 +79,7 @@ public class BaseGraph {
             Iterator<BCNode> itj = nodes.iterator();
             while( itj.hasNext() ) {
                 BCNode nodej = itj.next();
-                if( _graph.findEdge(nodei,nodej) == null) {
+                if( _graph.findEdge(nodei,nodej) == null && nodei != nodej ) {
                     BCEdge e = new BCEdge( nodei.calcEucDistance( nodej ));
                     _graph.addEdge(e,nodei,nodej);
                 }

@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package spectralClustering.mst;
 
 /**
@@ -28,10 +25,9 @@ public class PrimsMST {
 	    // V is the set of all vertices in G
 	    ArrayList<BCNode> V = new ArrayList<BCNode>();
 	    V.addAll(G.getVertices());
-	    Iterator<BCNode> itV = V.iterator();
-	    BCNode s = itV.next();
-	    
-	    // pick starting node
+            
+            // pick starting node
+	    BCNode s = V.get(0);
 	    _minimumSpanningTree.addVertex(s);
 	    V.remove(s);
 	    
@@ -47,11 +43,10 @@ public class PrimsMST {
 	        // for all u in Vmst
 	        while(itVmst.hasNext()) {
 	            BCNode u = itVmst.next();
-	            Iterator<BCNode> itV2 = V.iterator();
-	            umin = u;
+	            Iterator<BCNode> itV = V.iterator();
 	            // find v in V so that E(u,v) is minimal
-	            while(itV2.hasNext()){
-	                BCNode v = itV2.next();
+	            while(itV.hasNext()){
+	                BCNode v = itV.next();
 	                if(G.isNeighbor(u,v)) {
 	                    BCEdge e = G.findEdge(u,v);
 	                    if( e.getWeight() < wmin ) {

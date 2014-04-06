@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package spectralClustering.data;
 
@@ -17,10 +13,10 @@ public class BCNode {
 
     private int id;
     
-    private double[] attributes;
+    private Double[] attributes;
     private int numAttributes;
     
-    public BCNode(int id, double[] attributes) {
+    public BCNode(int id, Double[] attributes) {
         this.id = id;
         this.attributes = attributes;
         numAttributes = attributes.length;

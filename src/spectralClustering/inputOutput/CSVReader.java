@@ -74,12 +74,12 @@ public class CSVReader {
 	 */
 	public BCNode[] inputToBCNodes(ArrayList<String[]> inputList){
 		BCNode[] output= new BCNode[inputList.size()];
-		double[] pointHolder;
+		Double[] pointHolder;
 		
 		int id = 0; 
 		
 		for(int i = 0 ; i < inputList.size(); i ++){
-			pointHolder = new double[inputList.get(0).length];
+			pointHolder = new Double[inputList.get(0).length];
 			for(int j = 0; j < inputList.get(i).length; j ++){
 				pointHolder[j] = Double.parseDouble(inputList.get(i)[j]);
 			}
