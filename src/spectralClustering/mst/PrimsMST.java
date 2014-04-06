@@ -10,10 +10,12 @@ package spectralClustering.mst;
  */
 
 
-import java.util.*;
-
-import edu.uci.ics.jung.graph.*;
-import spectralClustering.data.*;
+import edu.uci.ics.jung.graph.AbstractGraph;
+import edu.uci.ics.jung.graph.UndirectedSparseGraph;
+import java.util.ArrayList;
+import java.util.Iterator;
+import spectralClustering.data.BCEdge;
+import spectralClustering.data.BCNode;
 
 public class PrimsMST {
 	AbstractGraph<BCNode,BCEdge> _minimumSpanningTree;
