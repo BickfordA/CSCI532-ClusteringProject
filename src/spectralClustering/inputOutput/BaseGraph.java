@@ -17,6 +17,7 @@ public class BaseGraph {
 	private static AbstractGraph<BCNode,BCEdge> _graph;
 	
 	public BaseGraph(){
+		System.out.println("Creating base graph");
 		TunableParameters parameters = TunableParameters.getInstance();
         _fileName = parameters.getFileName();
         _graph = new UndirectedSparseGraph<BCNode,BCEdge>();
@@ -33,7 +34,6 @@ public class BaseGraph {
 	
 	// Parse text file and return data points as vertices in a graph
     private static void createGraph() {
-    	TunableParameters parameters = TunableParameters.getInstance();
 
         Pattern p = Pattern.compile( ",| |\n|\r" );
         try {

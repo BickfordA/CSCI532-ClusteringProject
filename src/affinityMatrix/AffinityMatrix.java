@@ -10,7 +10,7 @@ import spectralClustering.data.BCNode;
 import edu.uci.ics.jung.graph.AbstractGraph;
 
 public class AffinityMatrix {
-        static int[][] _nMatrix;
+    static int[][] _nMatrix; //Association count
 	static double[][] _affinityMatrix;
 	
 	public AffinityMatrix(PrimsMST minSpanningTree){
@@ -19,12 +19,12 @@ public class AffinityMatrix {
 		//initialize the matrix
 		_affinityMatrix = new double[parameters.getDataSetSize()][parameters.getDataSetSize()];
                 
-                _nMatrix = new int[parameters.getDataSetSize()][parameters.getDataSetSize()];
-                
-                for(int i = 0; i < parameters.getM(); i++){
-                    System.out.println(i);
-                    ConsensusClusteringRound(minSpanningTree.getMST());
-                }
+        _nMatrix = new int[parameters.getDataSetSize()][parameters.getDataSetSize()];
+        
+        for(int i = 0; i < parameters.getM(); i++){
+            System.out.println("Round: "+ i);
+            ConsensusClusteringRound(minSpanningTree.getMST());
+        }
 		
 	}
 	
@@ -36,16 +36,17 @@ public class AffinityMatrix {
 		int pointAIdx = 0;
 		int pointBIdx = 0;
 		
-		while(pointAIdx == pointBIdx){
-			pointAIdx = (int)( Math.random()*startCluster.size());
-			pointBIdx = (int)( Math.random()*startCluster.size());
-		}
+			
+
+
 		
 		
 		//two clusters
+		pointAIdx = (int)( Math.random()*startCluster.size());
 		ArrayList<BCNode> clusterA = new ArrayList<BCNode>();
 		clusterA.add(startCluster.remove(pointAIdx));
 		
+		pointBIdx = (int)( Math.random()*startCluster.size());
 		ArrayList<BCNode> clusterB = new ArrayList<BCNode>();
 		clusterB.add(startCluster.remove(pointBIdx));
 		
@@ -65,9 +66,11 @@ public class AffinityMatrix {
 				for(BCEdge edge: pointEdges){
 					currentWeight = edge.getWeight();
 					if(currentWeight < aNewDist){
-						//if not already in cluster?
-						aNewDist = currentWeight;
-						aNewPoint = minSpanningTree.getOpposite(point , edge);
+						//if not already in cluster
+						if(!clusterA.contains(minSpanningTree.getOpposite(point , edge))){
+							aNewDist = currentWeight;
+							aNewPoint = minSpanningTree.getOpposite(point , edge);
+						}
 					}
 				}
 			}
@@ -82,9 +85,11 @@ public class AffinityMatrix {
 				for(BCEdge edge: pointEdges){
 					currentWeight = edge.getWeight();
 					if(currentWeight < bNewDist){
-						//if not already in cluster?
-						bNewDist = currentWeight;
-						bNewPoint = minSpanningTree.getOpposite(point , edge);
+						//if not already in cluster
+						if(!clusterB.contains(minSpanningTree.getOpposite(point , edge))){
+							bNewDist = currentWeight;
+							bNewPoint = minSpanningTree.getOpposite(point , edge);
+						}
 					}
 				}
 			}
@@ -93,41 +98,42 @@ public class AffinityMatrix {
 			//select the smaller of two points to add
 			//BCNode selection = null;
 			if(bNewDist < aNewDist){
-                                //check if clusters touch (if point is in other cluster)
-                                if( clusterA.contains(bNewPoint) ) {
-                                        clustersTouch = true;
-                                //if not add the point to the respective cluster
-                                } else {
-                                        clusterB.add(bNewPoint);
-                                }
-			} else 
-                                //check if clusters touch (if point is in other cluster)
-                                if( clusterB.contains(aNewPoint) ) {
-                                        clustersTouch = true;
-                                //if not add the point to the respective cluster
-                                } else {
-                                        clusterA.add(aNewPoint);
-                                }
+                //check if clusters touch (if point is in other cluster)
+                if( clusterA.contains(bNewPoint) ) {
+                        clustersTouch = true;
+                //if not add the point to the respective cluster
+                } else {
+                		startCluster.remove(bNewPoint);
+                        clusterB.add(bNewPoint);
+                }
+			} else {
+	            //check if clusters touch (if point is in other cluster)
+	            if( clusterB.contains(aNewPoint) ) {
+	                    clustersTouch = true;
+	            //if not add the point to the respective cluster
+	            } else {
+	            	startCluster.remove(aNewPoint);
+	                    clusterA.add(aNewPoint);
+	            }
 			}
-			
+		}
 		
-		
-                        //update similarity for each point based on its partition
-                        for( BCNode i : clusterA ){
-                            clusterA.remove(i);
-                            for( BCNode j : clusterA ) {
-                                _nMatrix[i.getIndex()][j.getIndex()]++;
-                                _nMatrix[j.getIndex()][i.getIndex()]++;
-                            }
-                        }
+        //update similarity for each point based on its partition
+        for( BCNode i : clusterA ){
+            //clusterA.remove(i);
+            for( BCNode j : clusterA ) {
+                _nMatrix[i.getIndex()][j.getIndex()]++;
+               // _nMatrix[j.getIndex()][i.getIndex()]++;
+            }
+        }
 
-                        for( BCNode i : clusterB ){
-                            clusterB.remove(i);
-                            for( BCNode j : clusterB ) {
-                                _nMatrix[i.getIndex()][j.getIndex()]++;
-                                _nMatrix[j.getIndex()][i.getIndex()]++;
-                            }
-                        }
+        for( BCNode i : clusterB ){
+            //clusterB.remove(i);
+            for( BCNode j : clusterB ) {
+                _nMatrix[i.getIndex()][j.getIndex()]++;
+                //_nMatrix[j.getIndex()][i.getIndex()]++;
+            }
+        }
 		
 	}
 
