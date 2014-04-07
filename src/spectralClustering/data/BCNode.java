@@ -11,19 +11,28 @@ package spectralClustering.data;
 
 public class BCNode {
 
+    // id from original data set
     private int id;
+    
+    // index value for constructing simularity matrix
+    private int index;
     
     private Double[] attributes;
     private int numAttributes;
     
-    public BCNode(int id, Double[] attributes) {
+    public BCNode(int id, int index, Double[] attributes) {
         this.id = id;
+        this.index = index;
         this.attributes = attributes;
         numAttributes = attributes.length;
     }
     
     public int getId() {
         return id;
+    }
+    
+    public int getIndex() {
+        return index;
     }
     
     public Double getAttribute(int index){

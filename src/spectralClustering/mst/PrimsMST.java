@@ -68,7 +68,7 @@ public class PrimsMST {
     }
     
     
-    
+    public AbstractGraph<BCNode,BCEdge> getMST(){ return _minimumSpanningTree;}
     
   
 }

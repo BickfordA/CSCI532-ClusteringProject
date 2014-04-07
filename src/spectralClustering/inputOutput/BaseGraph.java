@@ -39,9 +39,9 @@ public class BaseGraph {
         try {
             Scanner scan = new Scanner(new FileReader(_fileName));
             scan.useDelimiter(p);
+            int index = 0;
             while( scan.hasNextLine() ) {
                 int ID = scan.nextInt();
-                //System.out.println(ID);
                 Double[] attr = new Double[_numAttributes];
                 for(int i = 0; i < _numAttributes; i++) {
                     String s = scan.next();
@@ -50,10 +50,9 @@ public class BaseGraph {
                     } else {
                         attr[i] = Double.valueOf(s);
                     }
-                    //System.out.print(attr[i] + " ");
                 }
-                //System.out.println();
-                _graph.addVertex(new BCNode(ID, attr));
+                _graph.addVertex(new BCNode(ID, index, attr));
+                index++;
                 if( scan.hasNextLine() ) {
                     scan.nextLine();
                 }

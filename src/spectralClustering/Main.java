@@ -2,6 +2,7 @@ package spectralClustering;
 
 import spectralClustering.inputOutput.BaseGraph;
 import spectralClustering.mst.PrimsMST;
+import affinityMatrix.AffinityMatrix;
 
 
 
@@ -17,18 +18,17 @@ public class Main {
     	//create MST
     	// find MST using Prim's
         System.out.println("Finding MST");
-        
         PrimsMST primsMST =  new PrimsMST(rawGraph.getGraph());
-        
-        System.out.println("done");
     	
     	//find relative distances
         
     	
-    	//construct similarity matrix
-        
+    	//construct affinity matrix
+        System.out.println("Finding affinity matrix");
+        AffinityMatrix sm = new AffinityMatrix(primsMST);
+        System.out.println("done");
     	
-    	//assign clusters based on similarity matrix
+    	//assign clusters based on affinity matrix
         
     	
     	//perform cluster evaluation

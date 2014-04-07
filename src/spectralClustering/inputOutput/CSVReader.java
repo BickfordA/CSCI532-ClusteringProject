@@ -77,13 +77,14 @@ public class CSVReader {
 		Double[] pointHolder;
 		
 		int id = 0; 
-		
+		int index = 0;
 		for(int i = 0 ; i < inputList.size(); i ++){
 			pointHolder = new Double[inputList.get(0).length];
 			for(int j = 0; j < inputList.get(i).length; j ++){
 				pointHolder[j] = Double.parseDouble(inputList.get(i)[j]);
 			}
-			output[i] = new BCNode(id ,pointHolder);
+			output[i] = new BCNode(id, index, pointHolder);
+                        index++;
 		}
 		return output;
 	}
