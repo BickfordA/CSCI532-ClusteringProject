@@ -20,9 +20,9 @@ public class TunableParameters {
 	
 	//initialize the parameters
 	private TunableParameters(){
-		_sourceDataFilePath  = "breastcancer2.txt";
+		_sourceDataFilePath  = "breastcancer.txt";
 		_sourceDataAttributeNum = 9;
-		_sourceDataSetSize = 5; //need to look this up
+		_sourceDataSetSize = 699; //need to look this up
                 _m = 200;
 		
 	}

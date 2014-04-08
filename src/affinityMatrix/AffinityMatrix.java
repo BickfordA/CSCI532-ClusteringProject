@@ -15,17 +15,27 @@ public class AffinityMatrix {
 	
 	public AffinityMatrix(PrimsMST minSpanningTree){
 		TunableParameters parameters = TunableParameters.getInstance();
-		
+		int n = parameters.getDataSetSize();
 		//initialize the matrix
-		_affinityMatrix = new double[parameters.getDataSetSize()][parameters.getDataSetSize()];
+		_affinityMatrix = new double[n][n];
                 
-        _nMatrix = new int[parameters.getDataSetSize()][parameters.getDataSetSize()];
+        _nMatrix = new int[n][n];
         
-        for(int i = 0; i < parameters.getM(); i++){
+        int m = parameters.getM();
+        for(int i = 0; i < m; i++){
             System.out.println("Round: "+ i);
             ConsensusClusteringRound(minSpanningTree.getMST());
         }
-		
+	
+        // print _nMatrix
+        for(int i = 0; i < n; i++ ) {
+            System.out.format("%4d: ", i);
+            for(int j = 0; j < n; j++ ) {
+                System.out.format("%4d", _nMatrix[i][j]);
+            }
+            System.out.println();
+        }
+        
 	}
 	
 	private void ConsensusClusteringRound(AbstractGraph<BCNode,BCEdge> minSpanningTree){
@@ -33,20 +43,15 @@ public class AffinityMatrix {
 		startCluster.addAll(minSpanningTree.getVertices());
 		
 		//select two different points at random
-		int pointAIdx = 0;
-		int pointBIdx = 0;
-		
-			
-
-
-		
+		//int pointAIdx = 0;
+		//int pointBIdx = 0;
 		
 		//two clusters
-		pointAIdx = (int)( Math.random()*startCluster.size());
+		int pointAIdx = (int)( Math.random()*startCluster.size());
 		ArrayList<BCNode> clusterA = new ArrayList<BCNode>();
 		clusterA.add(startCluster.remove(pointAIdx));
 		
-		pointBIdx = (int)( Math.random()*startCluster.size());
+		int pointBIdx = (int)( Math.random()*startCluster.size());
 		ArrayList<BCNode> clusterB = new ArrayList<BCNode>();
 		clusterB.add(startCluster.remove(pointBIdx));
 		
@@ -120,18 +125,18 @@ public class AffinityMatrix {
 		
         //update similarity for each point based on its partition
         for( BCNode i : clusterA ){
-            //clusterA.remove(i);
             for( BCNode j : clusterA ) {
-                _nMatrix[i.getIndex()][j.getIndex()]++;
-               // _nMatrix[j.getIndex()][i.getIndex()]++;
+                if( i.getIndex() != j.getIndex()){
+                    _nMatrix[i.getIndex()][j.getIndex()]++;
+                }
             }
         }
 
         for( BCNode i : clusterB ){
-            //clusterB.remove(i);
             for( BCNode j : clusterB ) {
-                _nMatrix[i.getIndex()][j.getIndex()]++;
-                //_nMatrix[j.getIndex()][i.getIndex()]++;
+                if( i.getIndex() != j.getIndex()){
+                    _nMatrix[i.getIndex()][j.getIndex()]++;
+                }
             }
         }
 		
