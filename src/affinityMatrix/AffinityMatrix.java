@@ -3,7 +3,7 @@ package affinityMatrix;
 import java.util.ArrayList;
 import java.util.Collection;
 import spectralClustering.mst.PrimsMST;
-
+import Jama.*;
 import spectralClustering.TunableParameters;
 import spectralClustering.data.BCEdge;
 import spectralClustering.data.BCNode;
@@ -12,6 +12,7 @@ import edu.uci.ics.jung.graph.AbstractGraph;
 public class AffinityMatrix {
         static int[][] _nMatrix; //Association count
 	static double[][] _affinityMatrix;
+        static double[][] _diagonalMatrix;
 	
 	public AffinityMatrix(PrimsMST minSpanningTree){
 		TunableParameters parameters = TunableParameters.getInstance();
@@ -19,6 +20,7 @@ public class AffinityMatrix {
                 double sigma = parameters.getSigma();
 		//initialize the matrix
 		_affinityMatrix = new double[n][n];
+                _diagonalMatrix = new double[n][n];
                 
                 _nMatrix = new int[n][n];
 
@@ -35,16 +37,15 @@ public class AffinityMatrix {
                     }
                 }
                 
-                // print _nMatrix
-                /*
+                
                 for(int i = 0; i < n; i++ ) {
-                    System.out.format("%4d: ", i);
+                    _diagonalMatrix[i][i] = 0.0;
                     for(int j = 0; j < n; j++ ) {
-                        System.out.format("%4d", _nMatrix[i][j]);
+                        if( j != i) _diagonalMatrix[i][j] = 0.0;
+                        _diagonalMatrix[i][i] += _affinityMatrix[i][j];
                     }
-                    System.out.println();
                 }
-                */
+                
 	}
 	
 	private void ConsensusClusteringRound(AbstractGraph<BCNode,BCEdge> minSpanningTree){
@@ -132,24 +133,32 @@ public class AffinityMatrix {
 			}
 		}
 		
-        //update similarity for each point based on its partition
-        for( BCNode i : clusterA ){
-            for( BCNode j : clusterA ) {
-                if( i.getIndex() != j.getIndex()){
-                    _nMatrix[i.getIndex()][j.getIndex()]++;
+                //update similarity for each point based on its partition
+                for( BCNode i : clusterA ){
+                    for( BCNode j : clusterA ) {
+                        if( i.getIndex() != j.getIndex()){
+                            _nMatrix[i.getIndex()][j.getIndex()]++;
+                        }
+                    }
                 }
-            }
-        }
 
-        for( BCNode i : clusterB ){
-            for( BCNode j : clusterB ) {
-                if( i.getIndex() != j.getIndex()){
-                    _nMatrix[i.getIndex()][j.getIndex()]++;
+                for( BCNode i : clusterB ){
+                    for( BCNode j : clusterB ) {
+                        if( i.getIndex() != j.getIndex()){
+                            _nMatrix[i.getIndex()][j.getIndex()]++;
+                        }
+                    }
                 }
-            }
-        }
 		
 	}
+        
+        public Matrix getAffinityMatrix(){
+            return new Matrix(_affinityMatrix);
+        }
+        
+        public Matrix getDiagonalMatrix(){
+            return new Matrix(_diagonalMatrix);
+        }
 
 
 }
