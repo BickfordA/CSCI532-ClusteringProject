@@ -36,17 +36,13 @@ public class PrimsMST {
 	        // Vmst is the set of all vertices in the new MST
 	        ArrayList<BCNode> Vmst = new ArrayList<BCNode>();
 	        Vmst.addAll(_minimumSpanningTree.getVertices());
-	        Iterator<BCNode> itVmst = Vmst.iterator();
 	        BCNode umin = s; // temp value
 	        BCNode vmin = s; // temp value
 	        double wmin = Double.POSITIVE_INFINITY;
 	        // for all u in Vmst
-	        while(itVmst.hasNext()) {
-	            BCNode u = itVmst.next();
-	            Iterator<BCNode> itV = V.iterator();
+	        for(BCNode u : Vmst) {
 	            // find v in V so that E(u,v) is minimal
-	            while(itV.hasNext()){
-	                BCNode v = itV.next();
+	            for(BCNode v : V){
 	                if(G.isNeighbor(u,v)) {
 	                    BCEdge e = G.findEdge(u,v);
 	                    if( e.getWeight() < wmin ) {

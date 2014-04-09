@@ -10,32 +10,41 @@ import spectralClustering.data.BCNode;
 import edu.uci.ics.jung.graph.AbstractGraph;
 
 public class AffinityMatrix {
-    static int[][] _nMatrix; //Association count
+        static int[][] _nMatrix; //Association count
 	static double[][] _affinityMatrix;
 	
 	public AffinityMatrix(PrimsMST minSpanningTree){
 		TunableParameters parameters = TunableParameters.getInstance();
 		int n = parameters.getDataSetSize();
+                double sigma = parameters.getSigma();
 		//initialize the matrix
 		_affinityMatrix = new double[n][n];
                 
-        _nMatrix = new int[n][n];
-        
-        int m = parameters.getM();
-        for(int i = 0; i < m; i++){
-            System.out.println("Round: "+ i);
-            ConsensusClusteringRound(minSpanningTree.getMST());
-        }
-	
-        // print _nMatrix
-        for(int i = 0; i < n; i++ ) {
-            System.out.format("%4d: ", i);
-            for(int j = 0; j < n; j++ ) {
-                System.out.format("%4d", _nMatrix[i][j]);
-            }
-            System.out.println();
-        }
-        
+                _nMatrix = new int[n][n];
+
+                int m = parameters.getM();
+                for(int i = 0; i < m; i++){
+                    System.out.println("Round: "+ i);
+                    ConsensusClusteringRound(minSpanningTree.getMST());
+                }
+
+                
+                for(int i = 0; i < n; i++ ) {
+                    for(int j = 0; j < n; j++ ) {
+                        _affinityMatrix[i][j] = Math.exp(-(1-((double)_nMatrix[i][j]/m))/sigma);
+                    }
+                }
+                
+                // print _nMatrix
+                /*
+                for(int i = 0; i < n; i++ ) {
+                    System.out.format("%4d: ", i);
+                    for(int j = 0; j < n; j++ ) {
+                        System.out.format("%4d", _nMatrix[i][j]);
+                    }
+                    System.out.println();
+                }
+                */
 	}
 	
 	private void ConsensusClusteringRound(AbstractGraph<BCNode,BCEdge> minSpanningTree){

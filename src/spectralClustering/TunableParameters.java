@@ -15,7 +15,7 @@ public class TunableParameters {
 	private final int _sourceDataAttributeNum;
 	private final int _sourceDataSetSize;
         private final int _m;
-	
+	private final double _sigma;
 	
 	
 	//initialize the parameters
@@ -24,7 +24,7 @@ public class TunableParameters {
 		_sourceDataAttributeNum = 9;
 		_sourceDataSetSize = 699; //need to look this up
                 _m = 200;
-		
+		_sigma = .2;
 	}
 	
 	//return the instance, if none create it
@@ -44,4 +44,5 @@ public class TunableParameters {
 	public int getFileAttributeNum(){ return _sourceDataAttributeNum;}
 	public int getDataSetSize(){ return _sourceDataSetSize; }
         public int getM(){ return _m; }
+        public double getSigma(){ return _sigma; }
 }
