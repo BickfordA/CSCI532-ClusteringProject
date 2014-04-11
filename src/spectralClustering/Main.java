@@ -27,8 +27,10 @@ public class Main {
         System.out.println("Finding affinity matrix");
         AffinityMatrix am = new AffinityMatrix(primsMST);
         
-        Matrix affinityMatrix = am.getAffinityMatrix();
-        Matrix diagonalMatrix = am.getDiagonalMatrix();
+        Matrix laplacian = am.getUnnormLaplacian();
+        
+        Matrix U = laplacian.eig().getV();
+        
         
         System.out.println("done");
     	
@@ -38,34 +40,7 @@ public class Main {
     	//perform cluster evaluation
         
     	
-    	
-        
-        
-        
-        
 
-        
-        /*
-        // simple graph example
-        Integer[] data1 = {1,2,3};
-        Integer[] data2 = {4,5,6};
-        
-        BCNode n1 = new BCNode(1, data1);
-        BCNode n2 = new BCNode(2, data2);
-        
-        g.addVertex(n1);
-        g.addVertex(n2);
-        
-        Pair n1n2 = new Pair(n1,n2);
-        
-        BCEdge en1n2 = new BCEdge( 4.0 );
-        
-        g.addEdge(en1n2, n1, n2);
-        
-        BCEdge e = (BCEdge) g.findEdge(n2, n1);
-        
-        
-        */
     	
     	
     }

@@ -20,6 +20,8 @@ public class AffinityMatrix {
                 double sigma = parameters.getSigma();
 		//initialize the matrix
 		_affinityMatrix = new double[n][n];
+                
+                // i know it's ridiculous to store n values in n by n matrix
                 _diagonalMatrix = new double[n][n];
                 
                 _nMatrix = new int[n][n];
@@ -31,13 +33,14 @@ public class AffinityMatrix {
                 }
 
                 
+                // calculate affinity matrix
                 for(int i = 0; i < n; i++ ) {
                     for(int j = 0; j < n; j++ ) {
                         _affinityMatrix[i][j] = Math.exp(-(1-((double)_nMatrix[i][j]/m))/sigma);
                     }
                 }
                 
-                
+                // calculate diagonal matrix
                 for(int i = 0; i < n; i++ ) {
                     _diagonalMatrix[i][i] = 0.0;
                     for(int j = 0; j < n; j++ ) {
@@ -47,6 +50,12 @@ public class AffinityMatrix {
                 }
                 
 	}
+        
+        public Matrix getUnnormLaplacian() {
+            Matrix A = new Matrix(_affinityMatrix);
+            Matrix D = new Matrix(_diagonalMatrix);
+            return D.minus(A);
+        }
 	
 	private void ConsensusClusteringRound(AbstractGraph<BCNode,BCEdge> minSpanningTree){
 		ArrayList<BCNode> startCluster = new ArrayList<BCNode>();
