@@ -21,45 +21,45 @@ public class AffinityMatrix {
 		//initialize the matrix
 		_affinityMatrix = new double[n][n];
                 
-                // i know it's ridiculous to store n values in n by n matrix
-                _diagonalMatrix = new double[n][n];
-                
-                _nMatrix = new int[n][n];
+        // i know it's ridiculous to store n values in n by n matrix
+        _diagonalMatrix = new double[n][n];
+        
+        _nMatrix = new int[n][n];
 
-                 int m = parameters.getM();
-	   			 int numberOfThreads = 4;
+         int m = parameters.getM();
+		 int numberOfThreads = 4;
 
-	    
-	    		ClusterThreadHandler(minSpanningTree.getMST() , m , numberOfThreads );
-	
-	    
 
-                
-                // calculate affinity matrix
-                for(int i = 0; i < n; i++ ) {
-                    for(int j = 0; j < n; j++ ) {
-                        _affinityMatrix[i][j] = Math.exp(-(1-((double)_nMatrix[i][j]/m))/sigma);
-                    }
-                }
-                
-                // calculate diagonal matrix
-                for(int i = 0; i < n; i++ ) {
-                    _diagonalMatrix[i][i] = 0.0;
-                    for(int j = 0; j < n; j++ ) {
-                        if( j != i) _diagonalMatrix[i][j] = 0.0;
-                        _diagonalMatrix[i][i] += _affinityMatrix[i][j];
-                    }
-                }
+		ClusterThreadHandler(minSpanningTree.getMST() , m , numberOfThreads );
+
+
+
+        
+        // calculate affinity matrix
+        for(int i = 0; i < n; i++ ) {
+            for(int j = 0; j < n; j++ ) {
+                _affinityMatrix[i][j] = Math.exp(-(1-((double)_nMatrix[i][j]/m))/sigma);
+            }
+        }
+        
+        // calculate diagonal matrix
+        for(int i = 0; i < n; i++ ) {
+            _diagonalMatrix[i][i] = 0.0;
+            for(int j = 0; j < n; j++ ) {
+                if( j != i) _diagonalMatrix[i][j] = 0.0;
+                _diagonalMatrix[i][i] += _affinityMatrix[i][j];
+            }
+        }
                 
 	}
         
-        public Matrix getUnnormLaplacian() {
-            Matrix A = new Matrix(_affinityMatrix);
-            Matrix D = new Matrix(_diagonalMatrix);
-            return D.minus(A);
-        }
+    public Matrix getUnnormLaplacian() {
+        Matrix A = new Matrix(_affinityMatrix);
+        Matrix D = new Matrix(_diagonalMatrix);
+        return D.minus(A);
+    }
         
-		private int[][] ClusterThreadHandler(AbstractGraph<BCNode,BCEdge> minSpanningTree, int rounds, int threadCount){
+	private int[][] ClusterThreadHandler(AbstractGraph<BCNode,BCEdge> minSpanningTree, int rounds, int threadCount){
 		int[][] output = new int[_nMatrix.length][_nMatrix.length];
 		
 		//set these -- get value from somewhere 
@@ -96,7 +96,7 @@ public class AffinityMatrix {
 		for(int[][] result: matricies){
 			for(int i = 0; i < result.length; i ++){
 				for(int j = 0; j < result[i].length; j ++){
-					_affinityMatrix[i][j] += result[i][j];
+					_nMatrix[i][j] += result[i][j];
 				}
 			}
 		}
@@ -105,13 +105,13 @@ public class AffinityMatrix {
 	}
 	
         
-        public Matrix getAffinityMatrix(){
-            return new Matrix(_affinityMatrix);
-        }
-        
-        public Matrix getDiagonalMatrix(){
-            return new Matrix(_diagonalMatrix);
-        }
+    public Matrix getAffinityMatrix(){
+        return new Matrix(_affinityMatrix);
+    }
+    
+    public Matrix getDiagonalMatrix(){
+        return new Matrix(_diagonalMatrix);
+    }
 
 
 }
