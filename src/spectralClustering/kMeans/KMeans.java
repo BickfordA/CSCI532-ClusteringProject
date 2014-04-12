@@ -5,6 +5,9 @@
 
 package spectralClustering.kMeans;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * KMeans class
  *
@@ -30,19 +33,22 @@ public class KMeans {
     }
     
     public int[] calcClusters(){
+        
         int[] clusters = new int[n];
         double[][] centers = new double[k][numAttributes];
         
         //pick k centers
         for(int i = 0; i < k; i++){
+            int r = i*n/k;
             for( int j = 0; j < numAttributes; j++){
                 // first k data points for now
-                centers[i][j] = data[i][j];
+                centers[i][j] = data[r][j];
             }
         }
         
         int changes = 1;
         while( changes != 0 ) {
+            // assignment
             // for each data point
             changes = 0;
             for(int i = 0; i < n; i++ ) {
@@ -59,6 +65,31 @@ public class KMeans {
                 // clustering changed
                 if( cprevious != clusters[i] ) {
                     changes++;
+                }
+            }
+            
+            // update
+            // recalculate centers
+            if( changes != 0 ) {
+                ArrayList<Integer>[] clusterPoints = new ArrayList[k];
+                for(int i = 0; i< k; i++) {
+                    clusterPoints[i] = (ArrayList<Integer>)new ArrayList();
+                }
+
+                for(int i = 0; i < n; i++){
+                    clusterPoints[clusters[i]].add(i);
+                }
+                
+                for(int i = 0; i < k; i++){ // i is index for cluster
+                    double[] sum = new double[numAttributes];
+                    for(Integer j : clusterPoints[i]) { // j is index for data
+                        for(int p = 0; p< numAttributes; p++){ // p is index for attribute
+                            sum[p] += data[j][p];
+                        }
+                    }
+                    for(int p = 0; p< numAttributes; p++){
+                        centers[i][p] = sum[p]/clusterPoints[i].size();
+                    }
                 }
             }
         }

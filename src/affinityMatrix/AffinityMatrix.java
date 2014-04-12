@@ -44,8 +44,11 @@ public class AffinityMatrix {
                 for(int i = 0; i < n; i++ ) {
                     _diagonalMatrix[i][i] = 0.0;
                     for(int j = 0; j < n; j++ ) {
-                        if( j != i) _diagonalMatrix[i][j] = 0.0;
-                        _diagonalMatrix[i][i] += _affinityMatrix[i][j];
+                        if( j != i) { 
+                            _diagonalMatrix[i][j] = 0.0;
+                        } else {
+                            _diagonalMatrix[i][i] += _affinityMatrix[i][j];
+                        }
                     }
                 }
                 
