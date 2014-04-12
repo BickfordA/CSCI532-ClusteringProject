@@ -1,6 +1,6 @@
 package spectralClustering;
 
-//Class to store all the tuanble parameters so that they can be easily changed.
+//Class to store all the tunable parameters so that they can be easily changed.
 
 public class TunableParameters {
 	private static TunableParameters _currentInstance;
@@ -17,6 +17,7 @@ public class TunableParameters {
     private final int _m;
 	private final double _sigma;
 	private final int _clusterSeedSize; //number of eigin vectors selected to perform k-means on
+	private final int _numberOfClusters;
 	
 	
 	//initialize the parameters
@@ -24,9 +25,10 @@ public class TunableParameters {
 		_sourceDataFilePath  = "breastcancer.txt";
 		_sourceDataAttributeNum = 9;
 		_sourceDataSetSize = 699; //need to look this up
-                _m = 200;
+		_m = 200;
 		_sigma = .2;
 		_clusterSeedSize = 50;
+		_numberOfClusters = 10;
 	}
 	
 	//return the instance, if none create it
@@ -48,4 +50,5 @@ public class TunableParameters {
     public int getM(){ return _m; }
     public double getSigma(){ return _sigma; }
     public int getNumberOfEVectors(){ return _clusterSeedSize;};
+    public int getNumberOfClusters(){ return _numberOfClusters;}
 }

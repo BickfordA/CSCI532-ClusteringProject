@@ -19,6 +19,8 @@ public class KMeans {
     private int k;
     private int n;
     private int numAttributes;
+    private double[][] _centers;
+    private int[] _assignments;
     
     public KMeans(double[][] data, int k) {
         this.data = data;
@@ -27,6 +29,16 @@ public class KMeans {
         this.n = data.length;
         this.numAttributes = data[0].length;
         
+        _assignments = calcClusters();
+        
+    }
+    
+    public double[][] getCenters(){
+    	return _centers;
+    }
+    
+    public int[] getAssignments(){
+    	return _assignments;
     }
     
     public int[] calcClusters(){
@@ -62,7 +74,7 @@ public class KMeans {
                 }
             }
         }
-        
+        _centers = centers;
         return clusters;
     }
     

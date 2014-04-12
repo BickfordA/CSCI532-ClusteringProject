@@ -3,6 +3,7 @@ package spectralClustering;
 import spectralClustering.inputOutput.BaseGraph;
 import spectralClustering.mst.PrimsMST;
 import affinityMatrix.AffinityMatrix;
+import affinityMatrix.Laplacian;
 import Jama.*;
 
 
@@ -27,14 +28,19 @@ public class Main {
         System.out.println("Finding affinity matrix");
         AffinityMatrix am = new AffinityMatrix(primsMST);
         
-        Matrix laplacian = am.getUnnormLaplacian();
+        //construct laplacian
+        //Matrix laplacian = am.getUnnormLaplacian();
         
-        Matrix U = laplacian.eig().getV();
+        //Matrix U = laplacian.eig().getV();
+        
+        Laplacian lm = new Laplacian(am);
+        
         
         
         System.out.println("done");
     	
     	//assign clusters based on affinity matrix
+        
         
     	
     	//perform cluster evaluation
