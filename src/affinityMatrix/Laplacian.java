@@ -36,7 +36,7 @@ public class Laplacian {
 		_eiginValues = eDecomp.getRealEigenvalues();
 		
 		
-		_normalizedLargestLaplacian = normalizeMatrix(largestEigenVectors(numberOfEV));
+		_normalizedLargestLaplacian = normalizeMatrix(transpose(largestEigenVectors(numberOfEV)));
 		
 	}
 	
@@ -121,7 +121,18 @@ public class Laplacian {
 		
 		return normalized;
 	}
-	
+	private double[][] transpose(double[][] input){
+		double[][] output = new double[input[0].length][input.length];
+		
+		for(int i = 0; i < input.length; i ++){
+			for(int j = 0; j < input.length; j ++){
+				output[j][i] = input[i][j];
+			}
+		}
+		
+		
+		return output;
+	}
 	private double[][] arrayListToDoubleArray(ArrayList<double[]> input){
 		double[][] output = new double[input.size()][input.get(0).length];
 		

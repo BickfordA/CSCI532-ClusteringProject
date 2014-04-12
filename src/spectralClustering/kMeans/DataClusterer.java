@@ -15,7 +15,7 @@ public class DataClusterer {
 		//double[][] clusters = evClusters.getCenters();
 		//int[] assignments = evClusters.getAssignments();
 		
-		/*
+		/**
 		 * Each point s_i is assigned to cluster j  if and only if row i of the matrix Y (laPoints)
 		 * was assigned to cluster j;
 		 */
