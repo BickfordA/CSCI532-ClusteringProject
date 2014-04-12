@@ -14,8 +14,9 @@ public class TunableParameters {
 	private final String _sourceDataFilePath;
 	private final int _sourceDataAttributeNum;
 	private final int _sourceDataSetSize;
-        private final int _m;
+    private final int _m;
 	private final double _sigma;
+	private final int _clusterSeedSize; //number of eigin vectors selected to perform k-means on
 	
 	
 	//initialize the parameters
@@ -25,6 +26,7 @@ public class TunableParameters {
 		_sourceDataSetSize = 699; //need to look this up
                 _m = 200;
 		_sigma = .2;
+		_clusterSeedSize = 50;
 	}
 	
 	//return the instance, if none create it
@@ -43,6 +45,7 @@ public class TunableParameters {
 	public String getFileName(){ return _sourceDataFilePath; }
 	public int getFileAttributeNum(){ return _sourceDataAttributeNum;}
 	public int getDataSetSize(){ return _sourceDataSetSize; }
-        public int getM(){ return _m; }
-        public double getSigma(){ return _sigma; }
+    public int getM(){ return _m; }
+    public double getSigma(){ return _sigma; }
+    public int getNumberOfEVectors(){ return _clusterSeedSize;};
 }

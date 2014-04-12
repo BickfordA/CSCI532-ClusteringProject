@@ -1,17 +1,23 @@
 package affinityMatrix;
 
-import Jama.EigenvalueDecomposition;
-import Jama.Matrix;
+import java.util.ArrayList;
+
 import Jama.*;
 import spectralClustering.TunableParameters;
 
 public class Laplacian {
 	int _dataSize;
+	Matrix _eiginVectors;
+	double _eiginValues[];
+	double[][] _normalizedLargestLaplacian;
+	
+	
 
 	public Laplacian(AffinityMatrix  input) {
 		TunableParameters params = TunableParameters.getInstance();
 		_dataSize = params.getDataSetSize();
-		
+		int numberOfEV = params.getNumberOfEVectors();
+
 		
 		Matrix diagonal = input.getDiagonalMatrix();
 		Matrix affinity = input.getAffinityMatrix();
@@ -25,11 +31,17 @@ public class Laplacian {
 		
 		Matrix laplacianMatrix = invSqrtSym(diagonal).times(affinity).times(invSqrtSym(diagonal)); //new Matrix(laplacian);
 		
+		EigenvalueDecomposition eDecomp = laplacianMatrix.eig();
+		_eiginVectors = eDecomp.getV();
+		_eiginValues = eDecomp.getRealEigenvalues();
 		
-		Matrix eiginValues = laplacianMatrix.eig().getV();
 		
+		_normalizedLargestLaplacian = normalizeMatrix(largestEigenVectors(numberOfEV));
 		
-		
+	}
+	
+	public double[][] getPoints(){
+		return _normalizedLargestLaplacian;
 	}
     /**
      * Should be included in jama?
@@ -66,11 +78,59 @@ public class Laplacian {
     
     
 	public double[][] largestEigenVectors(int numberOfEiginVectors ){
-		double topEVectors[][] = new double[numberOfEiginVectors][_dataSize];
+		double[][] eiginVectors = _eiginVectors.getArray();
 		
+		ArrayList<Double> topEiginVals = new ArrayList<Double>();
+		ArrayList<double[]> topEVectors = new ArrayList<double[]>();
 		
+		for(int i = 0; i < numberOfEiginVectors; i ++){
+			double topValue = Double.NEGATIVE_INFINITY;
+			double[] topVector = null;
+			for(int j = 0 ; j < _eiginValues.length; i++){
+				if(_eiginValues[j] > topValue){
+					if(!topEiginVals.contains(_eiginValues[j])){
+						topValue = _eiginValues[j];
+						topVector = eiginVectors[j];
+					}
+				}
+				
+			}
+			if (topVector != null){
+				topEiginVals.add(topValue);
+				topEVectors.add(topVector);
+			}
+			
+		}
 		
-		return topEVectors;
+		return arrayListToDoubleArray(topEVectors);
+		
+	}
+	
+	private double[][] normalizeMatrix(double[][] input){
+		double[][] normalized = new double[input.length][input[0].length];
+		for(int i = 0; i < input.length; i ++){
+			double jSum = 0 ; 
+			for(int j = 0 ; j < input.length;j ++){
+				jSum += (input[i][j] * input[i][j]);
+			}
+			jSum = Math.sqrt(jSum);
+			for(int j = 0 ; j < input.length;j ++){
+				normalized[i][j] = input[i][j]/jSum;
+			}
+		}
+		
+		return normalized;
+	}
+	
+	private double[][] arrayListToDoubleArray(ArrayList<double[]> input){
+		double[][] output = new double[input.size()][input.get(0).length];
+		
+		//shallow copy
+		for(int i = 0 ; i < input.size(); i++){
+			output[i] = input.get(i);
+		}
+		
+		return output;
 	}
 
 }
