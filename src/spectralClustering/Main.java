@@ -30,11 +30,11 @@ public class Main {
         AffinityMatrix am = new AffinityMatrix(primsMST);
         
         //construct laplacian
-        //Matrix laplacian = am.getUnnormLaplacian();
+        Matrix laplacian = am.getUnnormLaplacian();
         
-        //Matrix U = laplacian.eig().getV();
+        Matrix U = laplacian.eig().getV();
         
-        Laplacian lm = new Laplacian(am);
+        //Laplacian lm = new Laplacian(am);
         
         
         // find eigenvectors associated with k smallest positve eigenvalues;

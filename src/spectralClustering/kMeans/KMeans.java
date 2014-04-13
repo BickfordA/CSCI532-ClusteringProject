@@ -41,7 +41,6 @@ public class KMeans {
         for(int i = 0; i < k; i++){
             int r = i*n/k;
             for( int j = 0; j < numAttributes; j++){
-                // first k data points for now
                 centers[i][j] = data[r][j];
             }
         }

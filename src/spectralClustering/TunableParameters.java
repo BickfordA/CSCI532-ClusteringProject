@@ -26,7 +26,7 @@ public class TunableParameters {
 		_sourceDataAttributeNum = 9;
 		_sourceDataSetSize = 699; //need to look this up
 		_m = 200;
-		_sigma = .2;
+		_sigma = 1;
 		_clusterSeedSize = 50;
 		_numberOfClusters = 10;
 	}

@@ -13,7 +13,7 @@ public class DataClusterer {
 		
 		KMeans evClusters =  new KMeans(lapPoints, numClusters);
 		//double[][] clusters = evClusters.getCenters();
-		int[] assignments = evClusters.getAssignments();
+		//int[] assignments = evClusters.getAssignments();
 		
 		/*
 		 * Each point s_i is assigned to cluster j  if and only if row i of the matrix Y (laPoints)
@@ -21,7 +21,7 @@ public class DataClusterer {
 		 */
 		
 		for(int i = 0; i < data.length; i ++){
-			_clusterAssignment[i] = assignments[i];
+		//	_clusterAssignment[i] = assignments[i];
 		}
 		
 	}
