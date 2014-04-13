@@ -3,6 +3,7 @@ package spectralClustering;
 import spectralClustering.inputOutput.BaseGraph;
 import spectralClustering.mst.PrimsMST;
 import affinityMatrix.AffinityMatrix;
+import affinityMatrix.Laplacian;
 import Jama.*;
 import spectralClustering.kMeans.KMeans;
 
@@ -28,9 +29,13 @@ public class Main {
         System.out.println("Finding affinity matrix");
         AffinityMatrix am = new AffinityMatrix(primsMST);
         
-        //assign clusters based on affinity matrix
-        Matrix laplacian = am.getUnnormLaplacian();
-        Matrix U = laplacian.eig().getV();
+        //construct laplacian
+        //Matrix laplacian = am.getUnnormLaplacian();
+        
+        //Matrix U = laplacian.eig().getV();
+        
+        Laplacian lm = new Laplacian(am);
+        
         
         // find eigenvectors associated with k smallest positve eigenvalues;
         int k = 2;
@@ -52,23 +57,13 @@ public class Main {
         System.out.println(count);
         System.out.println("done");
         
-        /*
-    	double[][] A = {{2,1,3},
-                        {10,11,12},
-                        {3,1,2},
-                        {1,1,1},
-                        {2,2,2},
-                        {10,11,12},
-                        {11,9,11},
-                        {9,10,13},
-                        {-1,-1,-1}
-                        };
-        KMeans km = new KMeans(A,2);
-        int[] clusters = km.calcClusters();
-    	for(int i = 0; i < clusters.length; i++) {
-            System.out.println( clusters[i] );
-        }
-        */
+        
+    	
+    	//perform cluster evaluation
+        
+    	
+
+    	
     	
     }
 

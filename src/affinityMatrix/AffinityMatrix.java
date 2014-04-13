@@ -21,156 +21,97 @@ public class AffinityMatrix {
 		//initialize the matrix
 		_affinityMatrix = new double[n][n];
                 
-                // i know it's ridiculous to store n values in n by n matrix
-                _diagonalMatrix = new double[n][n];
-                
-                _nMatrix = new int[n][n];
+        // i know it's ridiculous to store n values in n by n matrix
+        _diagonalMatrix = new double[n][n];
+        
+        _nMatrix = new int[n][n];
 
-                int m = parameters.getM();
-                for(int i = 0; i < m; i++){
-                    System.out.println("Round: "+ i);
-                    ConsensusClusteringRound(minSpanningTree.getMST());
-                }
+         int m = parameters.getM();
+		 int numberOfThreads = 4;
 
-                
-                // calculate affinity matrix
-                for(int i = 0; i < n; i++ ) {
-                    for(int j = 0; j < n; j++ ) {
-                        _affinityMatrix[i][j] = Math.exp(-(1-((double)_nMatrix[i][j]/m))/sigma);
-                    }
-                }
-                
-                // calculate diagonal matrix
-                for(int i = 0; i < n; i++ ) {
-                    _diagonalMatrix[i][i] = 0.0;
-                    for(int j = 0; j < n; j++ ) {
-                        if( j != i) { 
-                            _diagonalMatrix[i][j] = 0.0;
-                        } else {
-                            _diagonalMatrix[i][i] += _affinityMatrix[i][j];
-                        }
-                    }
-                }
+
+		ClusterThreadHandler(minSpanningTree.getMST() , m , numberOfThreads );
+
+
+
+        
+        // calculate affinity matrix
+        for(int i = 0; i < n; i++ ) {
+            for(int j = 0; j < n; j++ ) {
+                _affinityMatrix[i][j] = Math.exp(-(1-((double)_nMatrix[i][j]/m))/sigma);
+            }
+        }
+        
+        // calculate diagonal matrix
+        for(int i = 0; i < n; i++ ) {
+            _diagonalMatrix[i][i] = 0.0;
+            for(int j = 0; j < n; j++ ) {
+                if( j != i) _diagonalMatrix[i][j] = 0.0;
+                _diagonalMatrix[i][i] += _affinityMatrix[i][j];
+            }
+        }
                 
 	}
         
-        public Matrix getUnnormLaplacian() {
-            Matrix A = new Matrix(_affinityMatrix);
-            Matrix D = new Matrix(_diagonalMatrix);
-            return D.minus(A);
-        }
-	
-	private void ConsensusClusteringRound(AbstractGraph<BCNode,BCEdge> minSpanningTree){
-		ArrayList<BCNode> startCluster = new ArrayList<BCNode>();
-		startCluster.addAll(minSpanningTree.getVertices());
+    public Matrix getUnnormLaplacian() {
+        Matrix A = new Matrix(_affinityMatrix);
+        Matrix D = new Matrix(_diagonalMatrix);
+        return D.minus(A);
+    }
+        
+	private int[][] ClusterThreadHandler(AbstractGraph<BCNode,BCEdge> minSpanningTree, int rounds, int threadCount){
+		int[][] output = new int[_nMatrix.length][_nMatrix.length];
 		
-		//select two different points at random
-		//int pointAIdx = 0;
-		//int pointBIdx = 0;
+		//set these -- get value from somewhere 
+
+		int threadReps = rounds / threadCount ;
 		
-		//two clusters
-		int pointAIdx = (int)( Math.random()*startCluster.size());
-		ArrayList<BCNode> clusterA = new ArrayList<BCNode>();
-		clusterA.add(startCluster.remove(pointAIdx));
+		ArrayList<Thread> threads = new ArrayList<Thread>();
+		ArrayList<int[][]> matricies = new ArrayList<int[][]>(); 
 		
-		int pointBIdx = (int)( Math.random()*startCluster.size());
-		ArrayList<BCNode> clusterB = new ArrayList<BCNode>();
-		clusterB.add(startCluster.remove(pointBIdx));
+		//create and start specified number of threads
+		for(int i = 0; i < threadCount; i++){
+			int[][] threadMatrix = new int[_nMatrix.length][_nMatrix.length];
+			matricies.add(threadMatrix);
+			System.out.println("Starting consensus clustering thread :" +i);
+			Thread clusterMatrixThread = new Thread(new consensusClusteringRoundThread(minSpanningTree, threadReps, threadMatrix ), Integer.toString(i));
+			clusterMatrixThread.start();
+			threads.add(clusterMatrixThread);
+		}
 		
-		//grow two subgraphs by adding minimal edges until they meet
-		boolean clustersTouch = false;
-		
-		while(!clustersTouch){
-			//find the closest next point for each cluster
+		//wait for threads to finish
+		try{
 			
-			BCNode aNewPoint = null;
-			double aNewDist = Double.POSITIVE_INFINITY;
-			//for all vertices that share an edge
-			for(BCNode point: clusterA) {
-				//update smallest if smaller
-				double currentWeight = 0.0;
-				Collection<BCEdge> pointEdges = minSpanningTree.getOutEdges(point);
-				for(BCEdge edge: pointEdges){
-					currentWeight = edge.getWeight();
-					if(currentWeight < aNewDist){
-						//if not already in cluster
-						if(!clusterA.contains(minSpanningTree.getOpposite(point , edge))){
-							aNewDist = currentWeight;
-							aNewPoint = minSpanningTree.getOpposite(point , edge);
-						}
-					}
-				}
+			for(int i = 0; i < threadCount; i ++){
+				System.out.println("Waiting for thread "+i+" to finish");
+				threads.get(i).join();
 			}
 			
-			BCNode bNewPoint = null;
-			double bNewDist = Double.POSITIVE_INFINITY;
-			//for all vertices that share an edge
-			for(BCNode point: clusterB) {
-				//update smallest if smaller
-				double currentWeight = 0.0;
-				Collection<BCEdge> pointEdges = minSpanningTree.getOutEdges(point);
-				for(BCEdge edge: pointEdges){
-					currentWeight = edge.getWeight();
-					if(currentWeight < bNewDist){
-						//if not already in cluster
-						if(!clusterB.contains(minSpanningTree.getOpposite(point , edge))){
-							bNewDist = currentWeight;
-							bNewPoint = minSpanningTree.getOpposite(point , edge);
-						}
-					}
+		}catch (InterruptedException e) {
+			System.out.println("Thread error");
+			e.printStackTrace();
+		}
+		
+		//copy in results
+		for(int[][] result: matricies){
+			for(int i = 0; i < result.length; i ++){
+				for(int j = 0; j < result[i].length; j ++){
+					_nMatrix[i][j] += result[i][j];
 				}
-			}
-                        
-                        
-			//select the smaller of two points to add
-			//BCNode selection = null;
-			if(bNewDist < aNewDist){
-                //check if clusters touch (if point is in other cluster)
-                if( clusterA.contains(bNewPoint) ) {
-                        clustersTouch = true;
-                //if not add the point to the respective cluster
-                } else {
-                		startCluster.remove(bNewPoint);
-                        clusterB.add(bNewPoint);
-                }
-			} else {
-	            //check if clusters touch (if point is in other cluster)
-	            if( clusterB.contains(aNewPoint) ) {
-	                    clustersTouch = true;
-	            //if not add the point to the respective cluster
-	            } else {
-	            	startCluster.remove(aNewPoint);
-	                    clusterA.add(aNewPoint);
-	            }
 			}
 		}
 		
-                //update similarity for each point based on its partition
-                for( BCNode i : clusterA ){
-                    for( BCNode j : clusterA ) {
-                        if( i.getIndex() != j.getIndex()){
-                            _nMatrix[i.getIndex()][j.getIndex()]++;
-                        }
-                    }
-                }
-
-                for( BCNode i : clusterB ){
-                    for( BCNode j : clusterB ) {
-                        if( i.getIndex() != j.getIndex()){
-                            _nMatrix[i.getIndex()][j.getIndex()]++;
-                        }
-                    }
-                }
-		
+		return output;
 	}
+	
         
-        public Matrix getAffinityMatrix(){
-            return new Matrix(_affinityMatrix);
-        }
-        
-        public Matrix getDiagonalMatrix(){
-            return new Matrix(_diagonalMatrix);
-        }
+    public Matrix getAffinityMatrix(){
+        return new Matrix(_affinityMatrix);
+    }
+    
+    public Matrix getDiagonalMatrix(){
+        return new Matrix(_diagonalMatrix);
+    }
 
 
 }
