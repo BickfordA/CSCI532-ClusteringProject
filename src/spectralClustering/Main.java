@@ -36,6 +36,7 @@ public class Main {
         
         //Laplacian lm = new Laplacian(am);
         
+        DataClusterer dc = new DataClusterer()
         
         // find eigenvectors associated with k smallest positve eigenvalues;
         int k = 2;
