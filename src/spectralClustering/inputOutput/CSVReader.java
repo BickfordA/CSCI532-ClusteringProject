@@ -3,6 +3,8 @@ package spectralClustering.inputOutput;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Random;
 
 import edu.uci.ics.jung.graph.AbstractGraph;
@@ -12,6 +14,7 @@ import spectralClustering.data.*;
 
 public class CSVReader {
     private final String _filename;
+    AbstractGraph<BCNode,BCEdge> _graph;
 
     /**
      * Public constructor
@@ -25,10 +28,39 @@ public class CSVReader {
     public CSVReader(TunableParameters instanceParameters)
     {
         _filename = instanceParameters.getFileName();
+        _graph = createGraph();
+        connectGraph();
+    }
+    
+    public AbstractGraph<BCNode,BCEdge> getGraph(){
+    	return _graph;
+    }
+    
+    public  void connectGraph(){
+        
+        int n = _graph.getVertexCount();
+        
+        System.out.println("n = " + n );
+        
+        System.out.println("Calculating Euclidean Distance");
+        
+        Collection<BCNode> nodes = _graph.getVertices();
+        Iterator<BCNode> iti = nodes.iterator();
+        while( iti.hasNext() ) {
+            BCNode nodei = iti.next();
+            Iterator<BCNode> itj = nodes.iterator();
+            while( itj.hasNext() ) {
+                BCNode nodej = itj.next();
+                if( _graph.findEdge(nodei,nodej) == null && nodei != nodej ) {
+                    BCEdge e = new BCEdge( nodei.calcEucDistance( nodej ));
+                    _graph.addEdge(e,nodei,nodej);
+                }
+            }
+        }
     }
 
     
-	public AbstractGraph<BCNode,BCEdge> loadDataSet() {
+	public AbstractGraph<BCNode,BCEdge> createGraph() {
 		ArrayList<String[]> rawData = importData(_filename);
 		
 		BCNode[] dataset = inputToBCNodes(rawData);
@@ -36,7 +68,7 @@ public class CSVReader {
 		
 		//create graph
 		
-		AbstractGraph<BCNode, BCEdge> graph = new UndirectedSparseGraph();
+		AbstractGraph<BCNode, BCEdge> graph = new UndirectedSparseGraph<BCNode, BCEdge>();
 	
 		for(BCNode currentNode : dataset){
 			graph.addVertex(currentNode);

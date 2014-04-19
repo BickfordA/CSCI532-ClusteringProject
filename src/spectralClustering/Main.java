@@ -3,6 +3,7 @@ package spectralClustering;
 import java.util.ArrayList;
 
 import spectralClustering.inputOutput.BaseGraph;
+import spectralClustering.inputOutput.CSVReader;
 import spectralClustering.inputOutput.PrintTimes;
 import spectralClustering.mst.PrimsMST;
 import affinityMatrix.AffinityMatrix;
@@ -23,7 +24,8 @@ public class Main {
 	    	
 	    	double startTime = System.currentTimeMillis();
 	    	//read in dataset 
-	    	BaseGraph rawGraph = new BaseGraph();
+	    	//BaseGraph rawGraph = new BaseGraph();
+	    	CSVReader rawGraph = new  CSVReader();
 	    	//i think this creates a connected graph?
 	    	//creating a planar graph might speed things up later on?
 	        times.add(System.currentTimeMillis()-startTime);

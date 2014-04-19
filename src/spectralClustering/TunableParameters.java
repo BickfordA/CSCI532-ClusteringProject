@@ -22,9 +22,30 @@ public class TunableParameters {
 	
 	//initialize the parameters
 	private TunableParameters(){
-		_sourceDataFilePath  = "breastcancer.txt";
-		_sourceDataAttributeNum = 9;
-		_sourceDataSetSize = 699; //need to look this up
+		//_sourceDataFilePath  = "breastcancer.txt";
+		//_sourceDataAttributeNum = 9;
+		//_sourceDataSetSize = 699; 
+		
+		//_sourceDataFilePath  = "data/Cardiotocography/CTG_no_class_labels.csv";
+		//_sourceDataAttributeNum = 22;
+		//_sourceDataSetSize = 2126; 
+		
+		//_sourceDataFilePath  = "data/ClimateModel/ClimateModel_no_class_labels.csv";
+		//_sourceDataAttributeNum = 18;
+		//_sourceDataSetSize = 540; 
+		
+		//_sourceDataFilePath  = "data/Hill-Vally Data Set/HillVally_no_class_labels.csv";
+		//_sourceDataAttributeNum = 100;
+		//_sourceDataSetSize = 1212;
+		
+		//_sourceDataFilePath  = "data/Ionosphere/ionosphere_no_class_labels.csv";
+		//_sourceDataAttributeNum = 33;
+		//_sourceDataSetSize = 351; 
+		
+		_sourceDataFilePath  = "data/Knowledge/knowledge_no_class_lables.csv";
+		_sourceDataAttributeNum = 5;
+		_sourceDataSetSize = 258; 
+		
 		_m = 200;
 		_sigma = 1;
 		_clusterSeedSize = 50;
