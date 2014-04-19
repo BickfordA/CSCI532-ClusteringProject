@@ -7,8 +7,8 @@ import spectralClustering.inputOutput.CSVReader;
 import spectralClustering.inputOutput.PrintTimes;
 import spectralClustering.mst.PrimsMST;
 import affinityMatrix.AffinityMatrix;
-import affinityMatrix.Laplacian;
 import Jama.*;
+import spectralClustering.inputOutput.PrintClusters;
 import spectralClustering.kMeans.KMeans;
 
 
@@ -16,9 +16,15 @@ import spectralClustering.kMeans.KMeans;
 public class Main {
     public static void main(String[] args){
     	PrintTimes printer = new PrintTimes();
-    	
-    	for(int j = 0; j < 10; j ++){
-    		
+        PrintClusters cprinter = new PrintClusters();
+    	TunableParameters params = TunableParameters.getInstance();
+        int runs = 10;
+        
+        int[][] allClusters = new int[runs][params.getDataSetSize()];
+        
+    	for(int j = 0; j < runs; j ++){
+    		System.out.println("Run: " + j);
+                
 	    	ArrayList<Double> times = new ArrayList<Double>();
 	    	ArrayList<String> titles = new ArrayList<String>();
 	    	
@@ -36,7 +42,7 @@ public class Main {
 	        System.out.println("Finding MST");
 	        PrimsMST primsMST =  new PrimsMST(rawGraph.getGraph());
 	        
-	        times.add(System.currentTimeMillis()-times.get(times.size()-1));
+	        times.add(System.currentTimeMillis()-startTime);
 	        titles.add("create the MST");
 	    	//find relative distances
 	        
@@ -46,15 +52,15 @@ public class Main {
 	        System.out.println("Finding affinity matrix");
 	        AffinityMatrix am = new AffinityMatrix(primsMST);
 	        
-	        times.add(System.currentTimeMillis()-times.get(times.size()-1));
+	        times.add(System.currentTimeMillis()-startTime);
 	        titles.add("find the affinity matrix");
 	        
 	        //construct laplacian
 	        Matrix laplacian = am.getUnnormLaplacian();
 	        Matrix U = laplacian.eig().getV();
 	        
-	        times.add(System.currentTimeMillis()-times.get(times.size()-1));
-	        titles.add("laplacian");
+	        //times.add(System.currentTimeMillis()-startTime);
+	        //titles.add("laplacian");
 	        
 	        //Laplacian lm = new Laplacian(am);
 	        
@@ -62,33 +68,37 @@ public class Main {
 	        
 	        
 	        // find eigenvectors associated with k smallest positve eigenvalues;
-	        int k = 2;
+	        int k = params.getNumberOfClusters();
 	        double[][] Uarray = U.getArray();
 	        double[][] Uarrayk = new double[Uarray.length][k];
 	        for(int i = 0; i < Uarray.length; i++) {
 	            System.arraycopy(Uarray[i], 0, Uarrayk[i], 0, k);
 	        }
 	        
-	        times.add(System.currentTimeMillis()-times.get(times.size()-1));
-	        titles.add("find eigin vectors");
+	        times.add(System.currentTimeMillis()-startTime);
+	        titles.add("find eigen vectors");
 	        
 	        //perform cluster evaluation
 	        KMeans km = new KMeans(Uarrayk,k);
 	        int[] clusters = km.calcClusters();
+	        times.add(System.currentTimeMillis()-startTime);
+	        titles.add("cluster analysis");
+                
+                //print clusters
 	        int count = 0;
-	        for(int i = 0; i< clusters.length; i++){
-	            System.out.println((i+1) + ":" + clusters[i]);
+	        for(int i = 0; i < clusters.length; i++){
+                    allClusters[j][i] = clusters[i];
+	            //System.out.println((i+1) + ":" + clusters[i]);
 	            if(clusters[i] == 1) count++;
 	        }
 	        System.out.println();
-	        System.out.println(count);
-	        System.out.println("done");
-	        times.add(System.currentTimeMillis()-times.get(times.size()-1));
-	        titles.add("cluster analysis");
+	        //System.out.println(count);
 	        
-	        TunableParameters params = TunableParameters.getInstance();
-	        printer.print(times , "results" , titles);
+	        printer.print(times , "times" , titles);
     	}
+        
+        cprinter.print(allClusters, "clusters");
+        System.out.println("done");
     	
     }
 
