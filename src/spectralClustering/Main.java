@@ -36,7 +36,7 @@ public class Main {
 	        System.out.println("Finding MST");
 	        PrimsMST primsMST =  new PrimsMST(rawGraph.getGraph());
 	        
-	        times.add(times.get(times.size()-1)-startTime);
+	        times.add(System.currentTimeMillis()-times.get(times.size()-1));
 	        titles.add("create the MST");
 	    	//find relative distances
 	        
@@ -46,14 +46,14 @@ public class Main {
 	        System.out.println("Finding affinity matrix");
 	        AffinityMatrix am = new AffinityMatrix(primsMST);
 	        
-	        times.add(times.get(times.size()-1)-startTime);
+	        times.add(System.currentTimeMillis()-times.get(times.size()-1));
 	        titles.add("find the affinity matrix");
 	        
 	        //construct laplacian
 	        Matrix laplacian = am.getUnnormLaplacian();
 	        Matrix U = laplacian.eig().getV();
 	        
-	        times.add(times.get(times.size()-1)-startTime);
+	        times.add(System.currentTimeMillis()-times.get(times.size()-1));
 	        titles.add("laplacian");
 	        
 	        //Laplacian lm = new Laplacian(am);
@@ -69,7 +69,7 @@ public class Main {
 	            System.arraycopy(Uarray[i], 0, Uarrayk[i], 0, k);
 	        }
 	        
-	        times.add(times.get(times.size()-1)-startTime);
+	        times.add(System.currentTimeMillis()-times.get(times.size()-1));
 	        titles.add("find eigin vectors");
 	        
 	        //perform cluster evaluation
@@ -83,7 +83,7 @@ public class Main {
 	        System.out.println();
 	        System.out.println(count);
 	        System.out.println("done");
-	        times.add(times.get(times.size()-1)-startTime);
+	        times.add(System.currentTimeMillis()-times.get(times.size()-1));
 	        titles.add("cluster analysis");
 	        
 	        TunableParameters params = TunableParameters.getInstance();
