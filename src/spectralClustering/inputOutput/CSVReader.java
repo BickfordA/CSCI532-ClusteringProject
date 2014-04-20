@@ -155,4 +155,22 @@ public class CSVReader {
 		}
 		return normalized;
 	}
+        
+        public double[][] getDataAs2DArray() {
+            TunableParameters params = TunableParameters.getInstance();
+            int n = params.getDataSetSize();
+            int numAttributes = params.getFileAttributeNum();
+            double[][] data = new double[n][numAttributes];
+            
+            ArrayList<BCNode> nodes = new ArrayList();
+            nodes.addAll(_graph.getVertices());
+            
+            for( BCNode node : nodes){
+                for(int i = 0; i < numAttributes; i++) {
+                    data[node.getIndex()][i] = node.getAttribute(i);
+                }
+            }
+            
+            return data;
+        }
 }

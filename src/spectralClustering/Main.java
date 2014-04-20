@@ -2,7 +2,7 @@ package spectralClustering;
 
 import java.util.ArrayList;
 
-import spectralClustering.inputOutput.BaseGraph;
+
 import spectralClustering.inputOutput.CSVReader;
 import spectralClustering.inputOutput.PrintTimes;
 import spectralClustering.mst.PrimsMST;
@@ -18,9 +18,10 @@ public class Main {
     	PrintTimes printer = new PrintTimes();
         PrintClusters cprinter = new PrintClusters();
     	TunableParameters params = TunableParameters.getInstance();
-        int runs = 10;
+        int runs = 1;
         
         int[][] allClusters = new int[runs][params.getDataSetSize()];
+        int[][] allKMClusters = new int[runs][params.getDataSetSize()];
         
     	for(int j = 0; j < runs; j ++){
     		System.out.println("Run: " + j);
@@ -41,14 +42,12 @@ public class Main {
 	    	// find MST using Prim's
 	        System.out.println("Finding MST");
 	        PrimsMST primsMST =  new PrimsMST(rawGraph.getGraph());
-	        
 	        times.add(System.currentTimeMillis()-startTime);
 	        titles.add("create the MST");
 	    	//find relative distances
 	        
 	    	
 	    	//construct affinity matrix
-	        
 	        System.out.println("Finding affinity matrix");
 	        AffinityMatrix am = new AffinityMatrix(primsMST);
 	        
@@ -56,6 +55,7 @@ public class Main {
 	        titles.add("find the affinity matrix");
 	        
 	        //construct laplacian
+                System.out.println("find eigen vectors");
 	        Matrix laplacian = am.getUnnormLaplacian();
 	        Matrix U = laplacian.eig().getV();
 	        
@@ -76,7 +76,7 @@ public class Main {
 	        }
 	        
 	        times.add(System.currentTimeMillis()-startTime);
-	        titles.add("find eigen vectors");
+	        titles.add("Finding Eigen Vectors");
 	        
 	        //perform cluster evaluation
 	        KMeans km = new KMeans(Uarrayk,k);
@@ -85,19 +85,25 @@ public class Main {
 	        titles.add("cluster analysis");
                 
                 //print clusters
-	        int count = 0;
 	        for(int i = 0; i < clusters.length; i++){
                     allClusters[j][i] = clusters[i];
-	            //System.out.println((i+1) + ":" + clusters[i]);
-	            if(clusters[i] == 1) count++;
 	        }
-	        System.out.println();
-	        //System.out.println(count);
 	        
 	        printer.print(times , "times" , titles);
+                
+                // plain ol kmeans on normalized data
+                KMeans kmog = new KMeans(rawGraph.getDataAs2DArray(),k);
+                int[] kMeansClusters = kmog.calcClusters();
+	        for(int i = 0; i < clusters.length; i++){
+                    allKMClusters[j][i] = kMeansClusters[i];
+	        }
+                
     	}
-        
+        // print clusters
         cprinter.print(allClusters, "clusters");
+        cprinter.print(allKMClusters, "kmeans");
+        
+        
         System.out.println("done");
     	
     }

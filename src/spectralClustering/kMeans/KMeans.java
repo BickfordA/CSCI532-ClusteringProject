@@ -47,6 +47,7 @@ public class KMeans {
         
         int changes = 1;
         while( changes != 0 ) {
+            //System.out.println(changes);
             // assignment
             // for each data point
             changes = 0;

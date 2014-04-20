@@ -42,20 +42,30 @@ public class TunableParameters {
 //		_sourceDataSetSize = 540; 
 //		_numberOfClusters = 2;
                         
-		_sourceDataFilePath  = "data/Hill-Vally Data Set/HillVally_no_class_labels.csv";
-		_sourceDataAttributeNum = 100;
-		_sourceDataSetSize = 1212;
-                _numberOfClusters = 2;
+//		_sourceDataFilePath  = "data/Hill-Vally Data Set/HillVally_no_class_labels.csv";
+//		_sourceDataAttributeNum = 100;
+//		_sourceDataSetSize = 1212;
+//                _numberOfClusters = 2;
 		
-		//_sourceDataFilePath  = "data/Ionosphere/ionosphere_no_class_labels.csv";
-		//_sourceDataAttributeNum = 33;
-		//_sourceDataSetSize = 351;
-                //_numberOfClusters = 2;
+//		_sourceDataFilePath  = "data/Ionosphere/ionosphere_no_class_labels.csv";
+//		_sourceDataAttributeNum = 33;
+//		_sourceDataSetSize = 351;
+//                _numberOfClusters = 2;
 		
 //		_sourceDataFilePath  = "data/Knowledge/knowledge_no_class_lables.csv";
 //		_sourceDataAttributeNum = 5;
 //		_sourceDataSetSize = 258; 
-//                _numberOfClusters = 5;
+//                _numberOfClusters = 4;
+            
+//		_sourceDataFilePath  = "data/ToySets/path_based1_no_class_labels.csv";
+//		_sourceDataAttributeNum = 2;
+//		_sourceDataSetSize = 300; 
+//                _numberOfClusters = 3;
+                
+                _sourceDataFilePath  = "data/ToySets/spiral_no_class_labels.csv";
+		_sourceDataAttributeNum = 2;
+		_sourceDataSetSize = 312; 
+                _numberOfClusters = 3;
 		
 		_m = 200;
 		_sigma = 1;
